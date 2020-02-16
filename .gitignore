@@ -1,0 +1,6 @@
+.idea
+.htaccess
+**/__pycache__
+**/*.pyc
+nohup.*
+
