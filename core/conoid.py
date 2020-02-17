@@ -25,26 +25,36 @@ class Conoid(Figure):
 
         ax.plot3D([0, 0], [0, 1], [1.4, 1.4], color="red", linewidth=6, alpha=1)
         ax.plot3D([0, 0], [1, 1], [1.4, -1], color="red", linewidth=6, alpha=1)
+        ax.plot3D([0, 0], [1, 1], [1.4, 2], color="red", linewidth=6, alpha=1)
 
-        ax.scatter3D([0, 0, 0], [0, 1, 1], [1.4, 1.4, -1], color="k", s=12, alpha=1)
+        ax.scatter3D([0, 0, 0, 0], [0, 1, 1, 1], [1.4, 1.4, -1, 2], color="k", s=12, alpha=1)
 
         return ax
 
-    def get_s(self, p1, p2):
+    def get_s(self, p1, p2, p3):
         try:
             fp1 = float(p1.strip())
             fp2 = float(p2.strip())
             s = np.pi * fp1 * (fp1 + fp2)
             return str(s)
         except:
-            return super().get_s(p1, p2)
+            return super().get_s(p1, p2, p3)
 
-    def get_v(self, p1, p2):
+    def get_v(self, p1, p2, p3):
         try:
-            fp1 = float(p1.strip())
-            fp2 = float(p2.strip())
-            v = np.pi * fp1 * fp1 * fp2 / 3
+            d1 = float(p1.strip())  # d1
+            h1 = float(p2.strip())  # h1
+            h2 = float(p3.strip())  # h2
+            d2 = h2 * d1 / h1
+            v = np.pi * d1 * d1 * (h1 + h2) / 3 - np.pi * d2 * d2 * h2 / 3
             return str(v)
         except:
-            return super().get_v(p1, p2)
+            return super().get_v(p1, p2, p3)
 
+    @property
+    def has_p2(self):
+        return True
+
+    @property
+    def has_p3(self):
+        return True

@@ -42,7 +42,9 @@ class Figure:
         figure = ax.get_figure()
         figure_data = BytesIO()
         figure.savefig(figure_data, dpi=72)
-        figure.clf()
+
+        plt.close(figure)
+
         img = Image.open(figure_data)
         # return img
         return ImageTk.PhotoImage(img)
@@ -68,8 +70,23 @@ class Figure:
     def get_p2(self):
         return 0.5
 
-    def get_s(self, p1, p2):
+    def get_p3(self):
+        return 0.2
+
+    def get_s(self, p1, p2, p3):
         return "??"
 
-    def get_v(self, p1, p2):
+    def get_v(self, p1, p2, p3):
         return "??"
+
+    @property
+    def has_p1(self):
+        return True
+
+    @property
+    def has_p2(self):
+        return False
+
+    @property
+    def has_p3(self):
+        return False

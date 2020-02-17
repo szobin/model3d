@@ -1,6 +1,8 @@
 import tkinter as tk
-import numpy as np
 from functools import partial
+
+import sched
+import time
 
 from .cube import Cube
 from .ball import Ball
@@ -22,8 +24,10 @@ class App:
     tk_image = None
     param_frame = None
 
-    def __init__(self):
-        self.window = tk.Tk()
+    def __init__(self, window):
+        self.s = sched.scheduler(time.time, time.sleep)
+
+        self.window = window
         self.window.wm_title("3D models")
         self.window.geometry("{}x{}+200+10".format(W, H))
 
@@ -35,6 +39,9 @@ class App:
 
         self.figure_p2 = tk.StringVar()
         self.figure_p2.set("0.5")
+
+        self.figure_p3 = tk.StringVar()
+        self.figure_p3.set("0.2")
 
         self.figure_s = tk.StringVar()
         self.figure_s.set("??")
@@ -52,10 +59,10 @@ class App:
         self.fill_frame_home(self.frame_home)
         self.fill_frame_figure(self.frame_figure)
 
-        # self.frame_1p = tk.Frame(bg="gray", bd=1, width=W, height=100)
-        # self.fill_frame_1p(self.frame_1p)
-
         self.frame_home.place(x=0, y=0)
+
+        self.angle = -20
+        self.stop = False
 
     def fill_frame_home(self, parent):
         title = tk.Label(parent, width=17, height=2, text="Select 3D figure",
@@ -85,10 +92,7 @@ class App:
         self.canvas = tk.Canvas(parent, width=W, height=H-290, bg="white")
         self.canvas.place(x=0, y=40)
 
-        self.param_frame = tk.LabelFrame(parent, width=W, height=140)
-        self.param_frame.place(x=0, y=H-240)
-        self.fill_frame_1p(self.param_frame)
-
+        self.param_frame = None
         btn_return = tk.Button(parent, text="Return back",
                                font=("Helvetica", 12),
                                width=26, height=1, bg="green2",
@@ -98,13 +102,15 @@ class App:
     def update_p(self, name, index, mode):
         p1 = self.figure_p1.get()
         p2 = self.figure_p2.get()
-        s = self.selected_figure.get_s(p1, p2)
+        p3 = self.figure_p3.get()
+        s = self.selected_figure.get_s(p1, p2, p3)
         self.figure_s.set(s)
 
-        v = self.selected_figure.get_v(p1, p2)
+        v = self.selected_figure.get_v(p1, p2, p3)
         self.figure_v.set(v)
 
-    def fill_frame_1p(self, parent):
+    def fill_frame_params(self, parent):
+        # param 1
         y = 5
         x = 6
         label = tk.Label(parent, width=4, height=1, text="R=",
@@ -114,14 +120,27 @@ class App:
         entry = tk.Entry(parent, width=8, textvariable=self.figure_p1)
         entry.place(x=x+40, y=y+3)
 
-        y += 29
-        label2 = tk.Label(parent, width=4, height=1, text="H=",
-                          font=("Helvetica", 12), fg="black")
-        label2.place(x=x, y=y)
+        # param 2
+        if self.selected_figure.has_p2:
+            y += 29
+            label2 = tk.Label(parent, width=4, height=1, text="H=",
+                              font=("Helvetica", 12), fg="black")
+            label2.place(x=x, y=y)
 
-        entry2 = tk.Entry(parent, width=8, textvariable=self.figure_p2)
-        entry2.place(x=x+40, y=y+3)
+            entry2 = tk.Entry(parent, width=8, textvariable=self.figure_p2)
+            entry2.place(x=x+40, y=y+3)
 
+            # param 3
+            if self.selected_figure.has_p3:
+                y += 29
+                label3 = tk.Label(parent, width=4, height=1, text="h=",
+                                  font=("Helvetica", 12), fg="black")
+                label3.place(x=x, y=y)
+
+                entry3 = tk.Entry(parent, width=8, textvariable=self.figure_p3)
+                entry3.place(x=x + 40, y=y + 3)
+
+        # S
         y = 5
         x = 200
         label = tk.Label(parent, width=4, height=1, text="S=",
@@ -131,6 +150,7 @@ class App:
         entry = tk.Entry(parent, width=8, textvariable=self.figure_s, state=tk.DISABLED)
         entry.place(x=x+40, y=y+3)
 
+        # Volume
         y += 29
         label = tk.Label(parent, width=4, height=1, text="V=",
                          font=("Helvetica", 12), fg="black")
@@ -143,26 +163,50 @@ class App:
         self.selected_figure = figure
         self.figure_title_str.set("Figure: {}".format(figure.name))
 
-        self.canvas.delete("figure")
+        if self.param_frame is not None:
+            self.param_frame.destroy()
+            self.param_frame = None
+
+        self.param_frame = tk.LabelFrame(self.frame_figure, width=W, height=140)
+        self.param_frame.place(x=0, y=H-240)
+        self.fill_frame_params(self.param_frame)
 
         self.frame_home.pack_forget()
         self.frame_figure.pack()
-        # self.frame_1p.pack()
-
-        self.tk_image = figure.image3d(-20)
-        self.canvas.create_image(-40, 0, image=self.tk_image, tag="figure", anchor=tk.NW)
 
         self.figure_p1.set(str(self.selected_figure.get_p1()))
         self.figure_p2.set(str(self.selected_figure.get_p2()))
+        self.figure_p3.set(str(self.selected_figure.get_p3()))
+
+        self.angle = -20
+        self.update_figure()
+
+    def update_figure(self):
+        self.tk_image = self.selected_figure.image3d(self.angle)
+        self.canvas.delete("figure")
+        self.canvas.create_image(-40, 0, image=self.tk_image, tag="figure", anchor=tk.NW)
 
     def show_home(self):
         self.selected_figure = None
         self.frame_figure.pack_forget()
         self.frame_home.pack()
 
+    def update(self):
+        if self.stop:
+            return
+        if self.selected_figure is not None:
+            self.angle += 10
+            self.update_figure()
+
+        self.window.update()
+        self.s.enter(0.2, 1, self.update)
+
     def quit(self):
+        self.stop = True
         self.window.quit()
 
     def run(self):
         self.window.protocol("WM_DELETE_WINDOW", self.quit)
-        self.window.mainloop()
+        self.s.enter(0.2, 1, self.update)
+        self.s.run()
+        # self.window.mainloop()

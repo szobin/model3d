@@ -30,20 +30,24 @@ class Cone(Figure):
 
         return ax
 
-    def get_s(self, p1, p2):
+    def get_s(self, p1, p2, p3):
         try:
             fp1 = float(p1.strip())
             fp2 = float(p2.strip())
             s = np.pi * fp1 * (fp1 + fp2)
             return str(s)
         except:
-            return super().get_s(p1, p2)
+            return super().get_s(p1, p2, p3)
 
-    def get_v(self, p1, p2):
+    def get_v(self, p1, p2, p3):
         try:
             fp1 = float(p1.strip())
             fp2 = float(p2.strip())
             v = np.pi * fp1 * fp1 * fp2 / 3
             return str(v)
         except:
-            return super().get_v(p1, p2)
+            return super().get_v(p1, p2, p3)
+
+    @property
+    def has_p2(self):
+        return True

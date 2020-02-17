@@ -1,8 +1,10 @@
+from tkinter import *
 from core.app import App
 
 
 def main():
-    app = App()
+    win = Tk()
+    app = App(win)
     app.run()
 
 

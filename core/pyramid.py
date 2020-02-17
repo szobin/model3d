@@ -62,21 +62,24 @@ class Pyramid(Figure):
         ax.scatter3D([0, 0, 0], [0, 1, 1], [1, 1, -1], color="k", s=12, alpha=1)
         return ax
 
-    def get_s(self, p1, p2):
+    def get_s(self, p1, p2, p3):
         try:
             fp1 = float(p1.strip())
             fp2 = float(p2.strip())
             s = fp1 * (fp1 + 2 * fp2)
             return str(s)
         except:
-            return super().get_s(p1, p2)
+            return super().get_s(p1, p2, p3)
 
-    def get_v(self, p1, p2):
+    def get_v(self, p1, p2, p3):
         try:
             fp1 = float(p1.strip())
             fp2 = float(p2.strip())
             v = fp1 * fp1 * fp2 / 3
             return str(v)
         except:
-            return super().get_v(p1, p2)
+            return super().get_v(p1, p2, p3)
 
+    @property
+    def has_p2(self):
+        return True

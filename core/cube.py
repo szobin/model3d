@@ -37,18 +37,18 @@ class Cube(Figure):
         ax.scatter3D([xy, xy], [xy, xy], [-1, 1], color="k", s=12, alpha=1)
         return ax
 
-    def get_s(self, p1, p2):
+    def get_s(self, p1, p2, p3):
         try:
             fp1 = float(p1.strip())
             s = fp1 * fp1 * 6
             return str(s)
         except:
-            return super().get_s(p1, p2)
+            return super().get_s(p1, p2, p3)
 
-    def get_v(self, p1, p2):
+    def get_v(self, p1, p2, p3):
         try:
             fp1 = float(p1.strip())
             v = fp1 * fp1 * fp1
             return str(v)
         except:
-            return super().get_v(p1, p2)
+            return super().get_v(p1, p2, p3)
