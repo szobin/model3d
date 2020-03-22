@@ -1,4 +1,5 @@
 import tkinter as tk
+from cv2 import VideoCapture
 from functools import partial
 
 import sched
@@ -27,6 +28,7 @@ class App:
     def __init__(self, window):
         self.s = sched.scheduler(time.time, time.sleep)
 
+        self.cam = VideoCapture(0)
         self.window = window
         self.window.wm_title("3D models")
         self.window.geometry("{}x{}+200+10".format(W, H))
@@ -182,9 +184,11 @@ class App:
         self.update_figure()
 
     def update_figure(self):
-        self.tk_image = self.selected_figure.image3d(self.angle)
-        self.canvas.delete("figure")
-        self.canvas.create_image(-40, 0, image=self.tk_image, tag="figure", anchor=tk.NW)
+        s, img = self.cam.read()
+        if s:
+            self.tk_image = self.selected_figure.image3d(img, self.angle)
+            self.canvas.delete("figure")
+            self.canvas.create_image(-40, 0, image=self.tk_image, tag="figure", anchor=tk.NW)
 
     def show_home(self):
         self.selected_figure = None
