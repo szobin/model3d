@@ -12,6 +12,8 @@ class Figure:
 
     def __init__(self, name):
         self.__name = name
+        self.pass_count = -1
+        self.corners = None
         self.chess_shape = (5, 4)
 
     @property
@@ -48,6 +50,15 @@ class Figure:
         plt.close(figure)
 
         img = Image.open(figure_data)
+
+        # img = img.convert("RGBA")
+
+        # data = img.getdata()
+        # transparent_color = (255, 255, 255)
+        # alpha_color = transparent_color + (0, )
+        # new_data = [alpha_color if px[:3] == transparent_color else px for px in data]
+        # img.putdata(new_data)
+
         return np.array(img)
         # return ImageTk.PhotoImage(img)
 
@@ -69,8 +80,20 @@ class Figure:
     def image3d(self, img, angle):
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         ret, corners = cv2.findChessboardCorners(gray, self.chess_shape, None)
+        if ret:
+            self.corners = corners
+            self.pass_count = 0
+
         if not ret:
-            return convert_to_tk_image(img)
+            if self.pass_count < 0:
+                return convert_to_tk_image(img)
+
+            self.pass_count += 1
+            if self.pass_count > 4:
+                self.pass_count = -1
+                return convert_to_tk_image(img)
+
+            corners = self.corners
 
         surface = np.float32([corners[0, 0], corners[self.chess_shape[0] - 1, 0],
                               corners[len(corners) - 1, 0], corners[len(corners) - self.chess_shape[0], 0]])
