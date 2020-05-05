@@ -7,7 +7,7 @@ from .figure import Figure
 class Ball(Figure):
 
     def __init__(self):
-        super().__init__("Ball")
+        super().__init__("М'яч")
 
     def make_figure(self):
         ax = self.ax

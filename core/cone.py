@@ -5,7 +5,7 @@ from .figure import Figure
 class Cone(Figure):
 
     def __init__(self):
-        super().__init__("Cone")
+        super().__init__("Конус")
 
     def make_figure(self):
         ax = self.ax

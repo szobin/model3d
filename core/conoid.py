@@ -6,7 +6,7 @@ from .figure import Figure
 class Conoid(Figure):
 
     def __init__(self):
-        super().__init__("Conoid")
+        super().__init__("Коноїд")
 
     def make_figure(self):
         ax = self.ax

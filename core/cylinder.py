@@ -5,7 +5,7 @@ from .figure import Figure
 class Cylinder(Figure):
 
     def __init__(self):
-        super().__init__("Cylinder")
+        super().__init__("Циліндр")
 
     def make_figure(self):
         ax = self.ax

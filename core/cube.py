@@ -16,7 +16,7 @@ points = np.array([[-1, -1, -1],
 class Cube(Figure):
 
     def __init__(self):
-        super().__init__("Cube")
+        super().__init__("Куб")
 
     def make_figure(self):
         ax = self.ax

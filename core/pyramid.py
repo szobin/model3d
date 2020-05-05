@@ -7,7 +7,7 @@ from .helper import get_z
 class Pyramid(Figure):
 
     def __init__(self):
-        super().__init__("Pyramid")
+        super().__init__("Піраміда")
 
     def make_figure(self):
         ax = self.ax

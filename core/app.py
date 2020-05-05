@@ -34,7 +34,7 @@ class App:
         self.window.geometry("{}x{}+200+10".format(W, H))
 
         self.figure_title_str = tk.StringVar()
-        self.figure_title_str.set("Figure: -----")
+        self.figure_title_str.set("Фігура: -----")
 
         self.figure_p1 = tk.StringVar()
         self.figure_p1.set("1.0")
@@ -67,7 +67,7 @@ class App:
         self.stop = False
 
     def fill_frame_home(self, parent):
-        title = tk.Label(parent, width=17, height=2, text="Select 3D figure",
+        title = tk.Label(parent, width=17, height=2, text="Виберіть 3D фігуру",
                          font=("Helvetica", 24), fg="gold2")
         title.place(x=0, y=0)
 
@@ -80,7 +80,7 @@ class App:
             y = 110 + (i % 3) * 140
             button.place(x=x, y=y)
 
-        btn_exit = tk.Button(parent, text="Exit",
+        btn_exit = tk.Button(parent, text="Вихід",
                              font=("Helvetica", 16),
                              width=19, height=2, bg="red2",
                              command=self.quit)
@@ -95,7 +95,7 @@ class App:
         self.canvas.place(x=0, y=40)
 
         self.param_frame = None
-        btn_return = tk.Button(parent, text="Return back",
+        btn_return = tk.Button(parent, text="Повернення",
                                font=("Helvetica", 12),
                                width=26, height=1, bg="green2",
                                command=self.show_home)
@@ -163,7 +163,7 @@ class App:
 
     def show_figure(self, figure):
         self.selected_figure = figure
-        self.figure_title_str.set("Figure: {}".format(figure.name))
+        self.figure_title_str.set("Фігура: {}".format(figure.name))
 
         if self.param_frame is not None:
             self.param_frame.destroy()
